@@ -4,3 +4,5 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # SITE_URL é o endereço público do site, não é segredo
+  SECRETS_SCAN_OMIT_KEYS = "SITE_URL"
