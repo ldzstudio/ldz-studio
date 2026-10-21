@@ -19,15 +19,15 @@ Loja completa para produtos de impressão 3D, com painel administrativo.
 
 ## Tecnologia
 
-Next.js 15 + PostgreSQL. As fotos ficam no próprio banco, então só é preciso **um banco Postgres** e **uma hospedagem Node** (ex.: Vercel). Este projeto é independente: use banco, contas e chaves exclusivos da LDZ Studio.
+Next.js 15 + PostgreSQL. As fotos ficam no próprio banco, então só é preciso **um banco Postgres** e **uma hospedagem Node** (ex.: Netlify; o plano grátis da Vercel não permite uso comercial). Este projeto é independente: use banco, contas e chaves exclusivos da LDZ Studio.
 
-## Publicar (Vercel + Neon, plano grátis)
+## Publicar (Netlify + Neon, plano grátis)
 
 1. Crie um banco em [neon.tech](https://neon.tech) **só para a LDZ Studio** (região São Paulo) e copie a connection string.
-2. Em [vercel.com](https://vercel.com) → *Add New → Project* → importe o repositório `ldz-studio`.
+2. Em [netlify.com](https://app.netlify.com) → *Add new project → Import an existing project → GitHub* → escolha `ldz-studio`.
 3. Em *Environment Variables*, preencha (veja `.env.example`):
    - `DATABASE_URL`: a connection string do Neon
-   - `SITE_URL`: o endereço do site (ex.: `https://ldz-studio.vercel.app`, sem barra no final)
+   - `SITE_URL`: o endereço do site (ex.: `https://ldz-studio.netlify.app`, sem barra no final)
    - `AUTH_SECRET`: um texto aleatório longo
    - `ADMIN_EMAIL` e `ADMIN_PASSWORD`: seu login do painel
    - `MP_ACCESS_TOKEN` e `MP_WEBHOOK_SECRET`: quando tiver o Mercado Pago
@@ -40,7 +40,7 @@ Next.js 15 + PostgreSQL. As fotos ficam no próprio banco, então só é preciso
 3. Em *Webhooks*, cadastre `https://SEU-DOMINIO/api/webhooks/mercadopago` com o evento **Pagamentos** e copie a assinatura secreta para `MP_WEBHOOK_SECRET`.
 
 ### Domínio próprio
-Na Vercel: *Settings → Domains* → adicione `ldzstudio.com.br` e siga as instruções de DNS. Depois atualize `SITE_URL`.
+Na Netlify: *Domain management → Add a domain* → adicione `ldzstudio.com.br` e siga as instruções de DNS. Depois atualize `SITE_URL`.
 
 ## Rodar no computador
 
