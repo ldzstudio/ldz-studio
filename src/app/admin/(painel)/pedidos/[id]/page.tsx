@@ -57,6 +57,7 @@ export default async function AdminOrder({ params }: { params: Promise<{ id: str
             <div className="card stack" style={{ gap: 6 }}>
               <h2 style={{ marginBottom: 4 }}>Cliente</h2>
               <strong>{o.customer.name}</strong>
+              <span className="small muted">{o.customer_id ? "Cliente com conta" : "Comprou sem cadastro"}</span>
               <a href={`mailto:${o.customer.email}`} className="small link">{o.customer.email}</a>
               <span className="small">{o.customer.phone}</span>
               {o.customer.cpf && <span className="small muted">CPF {o.customer.cpf}</span>}

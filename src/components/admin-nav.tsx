@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 export const ADMIN_LINKS: [string, string][] = [
   ["/admin", "Visão geral"],
   ["/admin/pedidos", "Pedidos"],
+  ["/admin/clientes", "Clientes"],
   ["/admin/produtos", "Produtos"],
   ["/admin/categorias", "Categorias"],
   ["/admin/cupons", "Cupons"],

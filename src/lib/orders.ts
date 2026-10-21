@@ -127,6 +127,7 @@ export type Order = {
   tracking_code: string | null;
   notes: string;
   admin_notes: string;
+  customer_id: number | null;
   paid_at: string | null;
   created_at: string;
   updated_at: string;
@@ -140,6 +141,7 @@ export async function createOrder(input: {
   coupon?: string;
   payment: string;
   notes?: string;
+  customerId?: number | null;
 }) {
   const s = await getSettings();
   const allowed = [
@@ -169,8 +171,8 @@ export async function createOrder(input: {
     }
     if (qt.coupon) await client.query("update coupons set uses = uses + 1 where code=$1", [qt.coupon.code]);
     const { rows } = await client.query<Order>(
-      `insert into orders(customer, address, items, subtotal_cents, shipping_cents, discount_cents, total_cents, shipping_method, coupon_code, payment_method, notes)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning *`,
+      `insert into orders(customer, address, items, subtotal_cents, shipping_cents, discount_cents, total_cents, shipping_method, coupon_code, payment_method, notes, customer_id)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning *`,
       [
         JSON.stringify(input.customer),
         shippingOpt.requires_address ? JSON.stringify(input.address) : null,
@@ -183,6 +185,7 @@ export async function createOrder(input: {
         qt.coupon?.code ?? null,
         input.payment,
         (input.notes ?? "").slice(0, 1000),
+        input.customerId ?? null,
       ],
     );
     await client.query("commit");

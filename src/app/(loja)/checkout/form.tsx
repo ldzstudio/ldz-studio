@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { track, useCart } from "@/components/cart";
 import { brl } from "@/lib/format";
 import type { ShippingOption } from "@/lib/settings";
+import type { Address } from "@/lib/customer";
 
 type Quote = { subtotal_cents: number; shipping_cents: number; discount_cents: number; total_cents: number; coupon_error: string | null; coupon: { code: string } | null; errors: string[] };
 type Method = { id: string; label: string; hint: string };
@@ -25,10 +26,12 @@ function maskCpf(v: string) {
   return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
-export function CheckoutForm({ shipping, methods }: { shipping: ShippingOption[]; methods: Method[] }) {
+type Me = { name: string; email: string; phone: string; cpf: string; address: Address | null };
+
+export function CheckoutForm({ shipping, methods, customer: me }: { shipping: ShippingOption[]; methods: Method[]; customer: Me | null }) {
   const { items, ready, clear } = useCart();
-  const [customer, setCustomer] = useState({ name: "", email: "", phone: "", cpf: "" });
-  const [addr, setAddr] = useState({ cep: "", street: "", number: "", complement: "", district: "", city: "", state: "" });
+  const [customer, setCustomer] = useState({ name: me?.name ?? "", email: me?.email ?? "", phone: me?.phone ?? "", cpf: me?.cpf ?? "" });
+  const [addr, setAddr] = useState(me?.address ?? { cep: "", street: "", number: "", complement: "", district: "", city: "", state: "" });
   const [shippingId, setShippingId] = useState(shipping[0]?.id ?? "");
   const [payment, setPayment] = useState(methods[0]?.id ?? "");
   const [couponInput, setCouponInput] = useState("");
@@ -113,9 +116,14 @@ export function CheckoutForm({ shipping, methods }: { shipping: ShippingOption[]
       <div className="stack" style={{ gap: 18 }}>
         <div className="card form-sec">
           <h3 className="steps-title"><span>1</span> Seus dados</h3>
+          {me ? (
+            <span className="small muted">Comprando como <strong style={{ color: "var(--text)" }}>{me.email}</strong>. O pedido fica salvo em <Link href="/minha-conta" className="link">Minha conta</Link>.</span>
+          ) : (
+            <span className="small muted">Já tem conta? <Link href="/entrar?next=/checkout" className="link">Entrar</Link> para preencher seus dados e acompanhar o pedido. Ou continue sem cadastro.</span>
+          )}
           <label className="field">Nome completo<input type="text" required value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} autoComplete="name" /></label>
           <div className="grid-2">
-            <label className="field">E-mail<input type="email" required value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} autoComplete="email" /></label>
+            <label className="field">E-mail<input type="email" required readOnly={!!me} value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} autoComplete="email" /></label>
             <label className="field">WhatsApp<input type="tel" required value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: maskPhone(e.target.value) })} autoComplete="tel" placeholder="(11) 99999-9999" /></label>
           </div>
           <label className="field">CPF (para nota e envio)<input type="text" inputMode="numeric" value={customer.cpf} onChange={(e) => setCustomer({ ...customer, cpf: maskCpf(e.target.value) })} placeholder="000.000.000-00" /></label>

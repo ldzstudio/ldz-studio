@@ -2,6 +2,9 @@
 import { SignJWT, jwtVerify } from "jose";
 
 export const SESSION_COOKIE = "ldz_admin";
+export const CUSTOMER_COOKIE = "ldz_cliente";
+
+type Role = "admin" | "customer";
 
 function key() {
   const s = process.env.AUTH_SECRET;
@@ -9,19 +12,20 @@ function key() {
   return new TextEncoder().encode(s);
 }
 
-export async function signSession(adminId: number, email: string) {
-  return new SignJWT({ email })
+export async function signSession(id: number, email: string, role: Role = "admin") {
+  return new SignJWT({ email, role })
     .setProtectedHeader({ alg: "HS256" })
-    .setSubject(String(adminId))
+    .setSubject(String(id))
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime(role === "admin" ? "7d" : "30d")
     .sign(key());
 }
 
-export async function verifySession(token: string | undefined) {
+export async function verifySession(token: string | undefined, role: Role = "admin") {
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, key());
+    if (payload.role !== role) return null;
     return { id: Number(payload.sub), email: String(payload.email) };
   } catch {
     return null;

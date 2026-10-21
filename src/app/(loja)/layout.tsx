@@ -4,15 +4,16 @@ import { CartToast, Header, PageTracker } from "@/components/store-chrome";
 import { IconWhats } from "@/components/icons";
 import { getSettings, whatsappLink } from "@/lib/settings";
 import { listCategories } from "@/lib/catalog";
+import { getCustomer } from "@/lib/customer";
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
-  const [s, cats] = await Promise.all([getSettings(), listCategories()]);
+  const [s, cats, customer] = await Promise.all([getSettings(), listCategories(), getCustomer()]);
   const wa = whatsappLink(s.contact.whatsapp, `Olá! Vim pelo site da ${s.store_name}.`);
   const ig = s.contact.instagram.replace(/^@/, "");
   return (
     <CartProvider>
       {s.announcement && <div className="announce">{s.announcement}</div>}
-      <Header name={s.store_name} />
+      <Header name={s.store_name} customer={customer ? customer.name.split(" ")[0] : null} />
       <main>{children}</main>
       <footer className="footer">
         <div className="container">

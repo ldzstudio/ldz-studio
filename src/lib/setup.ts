@@ -111,7 +111,21 @@ create table if not exists events (
 );
 create index if not exists events_created_idx on events(created_at);
 create index if not exists events_type_idx on events(type, created_at);
+create table if not exists customers (
+  id serial primary key,
+  name text not null,
+  email text unique not null,
+  phone text not null default '',
+  cpf text not null default '',
+  password_hash text not null,
+  address jsonb,
+  created_at timestamptz not null default now(),
+  last_login_at timestamptz
+);
+alter table orders add column if not exists customer_id int references customers(id) on delete set null;
+create index if not exists orders_customer_idx on orders(customer_id);
 `;
+
 
 const cores = { name: "Cor", values: ["Preto", "Branco", "Cinza", "Vermelho"].map((label) => ({ label, price_delta_cents: 0 })) };
 const CATEGORIES: [string, string, string, number][] = [

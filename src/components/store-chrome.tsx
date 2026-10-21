@@ -3,9 +3,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { track, useCart } from "./cart";
-import { IconCart, IconMenu } from "./icons";
+import { IconCart, IconMenu, IconUser } from "./icons";
 
-export function Header({ name }: { name: string }) {
+export function Header({ name, customer }: { name: string; customer: string | null }) {
   const { count, ready } = useCart();
   const path = usePathname();
   const [open, setOpen] = useState(false);
@@ -32,6 +32,10 @@ export function Header({ name }: { name: string }) {
           ))}
         </nav>
         <div className="row" style={{ marginLeft: "auto" }}>
+          <Link href={customer ? "/minha-conta" : "/entrar"} className="cart-btn" aria-label={customer ? "Minha conta" : "Entrar"}>
+            <IconUser />
+            <span className="hide-sm">{customer ? customer : "Entrar"}</span>
+          </Link>
           <Link href="/carrinho" className="cart-btn" aria-label="Carrinho">
             <IconCart />
             <span className="hide-sm">Carrinho</span>

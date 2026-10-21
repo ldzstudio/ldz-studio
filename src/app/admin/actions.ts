@@ -268,3 +268,20 @@ export async function saveSiteSettings(patch: Partial<SiteSettings>): Promise<Ac
   revalidatePath("/", "layout");
   return { ok: true, message: "Alterações salvas e publicadas." };
 }
+
+/* ---------- Clientes ---------- */
+
+export async function resetCustomerPassword(_: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const id = Number(form.get("id"));
+  const password = String(form.get("password") || "");
+  if (password.length < 8) return { error: "A senha precisa ter pelo menos 8 caracteres." };
+  await q("update customers set password_hash=$2 where id=$1", [id, await bcrypt.hash(password, 10)]);
+  return { ok: true, message: "Nova senha definida. Envie para o cliente." };
+}
+
+export async function deleteCustomer(id: number) {
+  await requireAdmin();
+  await q("delete from customers where id=$1", [id]);
+  revalidatePath("/admin/clientes");
+}
