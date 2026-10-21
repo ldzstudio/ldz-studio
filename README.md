@@ -1,4 +1,4 @@
-# LDZ Studio · Loja virtual
+# LDZ Studio · Loja virtual 
 
 Loja completa para produtos de impressão 3D, com painel administrativo.
 
