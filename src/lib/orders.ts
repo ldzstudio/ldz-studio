@@ -1,5 +1,5 @@
 import "server-only";
-import { pool, one, q } from "./db";
+import { db, one, q } from "./db";
 import { unitPrice, type Product } from "./catalog";
 import { getSettings, mercadoPagoReady, type SiteSettings } from "./settings";
 
@@ -157,7 +157,7 @@ export async function createOrder(input: {
   if (qt.errors.length) throw new Error(qt.errors.join(" "));
   if (input.coupon && qt.coupon_error) throw new Error(qt.coupon_error);
 
-  const client = await pool().connect();
+  const client = await (await db()).connect();
   try {
     await client.query("begin");
     for (const line of qt.lines) {

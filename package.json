@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:setup": "node scripts/db-setup.mjs",
     "lint": "next lint"
   },
   "dependencies": {

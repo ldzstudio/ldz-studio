@@ -23,21 +23,16 @@ Next.js 15 + PostgreSQL. As fotos ficam no próprio banco, então só é preciso
 
 ## Publicar (Vercel + Neon, plano grátis)
 
-1. Crie um banco em [neon.tech](https://neon.tech) (ou Supabase/Railway) **só para a LDZ Studio** e copie a connection string.
-2. Suba esta pasta para um repositório novo no GitHub (ex.: `ldz-studio`).
-3. Em [vercel.com](https://vercel.com) → *Add New Project* → importe o repositório.
-4. Em *Environment Variables*, preencha as variáveis do arquivo `.env.example`:
-   - `DATABASE_URL`, `SITE_URL` (ex.: `https://ldzstudio.com.br`), `AUTH_SECRET` (texto aleatório longo),
-   - `ADMIN_EMAIL`, `ADMIN_PASSWORD`,
-   - `MP_ACCESS_TOKEN` e `MP_WEBHOOK_SECRET` (quando tiver o Mercado Pago).
-5. No seu computador, uma vez só, crie as tabelas e o admin:
-   ```bash
-   npm install
-   cp .env.example .env   # e coloque a mesma DATABASE_URL e o admin
-   npm run db:setup
-   ```
-   (Para não criar os produtos de exemplo: `SEED=0 npm run db:setup`.)
-6. Faça o deploy, acesse `/admin`, entre e personalize tudo.
+1. Crie um banco em [neon.tech](https://neon.tech) **só para a LDZ Studio** (região São Paulo) e copie a connection string.
+2. Em [vercel.com](https://vercel.com) → *Add New → Project* → importe o repositório `ldz-studio`.
+3. Em *Environment Variables*, preencha (veja `.env.example`):
+   - `DATABASE_URL`: a connection string do Neon
+   - `SITE_URL`: o endereço do site (ex.: `https://ldz-studio.vercel.app`, sem barra no final)
+   - `AUTH_SECRET`: um texto aleatório longo
+   - `ADMIN_EMAIL` e `ADMIN_PASSWORD`: seu login do painel
+   - `MP_ACCESS_TOKEN` e `MP_WEBHOOK_SECRET`: quando tiver o Mercado Pago
+4. Clique em *Deploy*. No primeiro acesso a loja cria sozinha as tabelas, o seu login e os produtos de exemplo (para não criar os exemplos, defina `SEED=0`).
+5. Acesse `/admin`, entre e personalize tudo. Depois de entrar, você pode trocar a senha em *Conta e acessos*.
 
 ### Mercado Pago
 1. Em mercadopago.com.br/developers → *Suas integrações* → crie uma aplicação (Checkout Pro).
@@ -52,6 +47,5 @@ Na Vercel: *Settings → Domains* → adicione `ldzstudio.com.br` e siga as inst
 ```bash
 npm install
 cp .env.example .env   # preencha
-npm run db:setup
 npm run dev            # http://localhost:3000  ·  painel em /admin
 ```
